@@ -12,17 +12,17 @@ import { toast } from 'react-toastify';
 interface Props {
   show: boolean;
   onCloseModal: () => void;
-  setShowCreateChannelModal: (flag: boolean) => void;
+  setShowInviteWorkspaceModal: (flag: boolean) => void;
 }
 
-const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowCreateChannelModal }) => {
+const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWorkspaceModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
-  const [newMember, onChangeNewMember, setNewMember] = useInput('');
   const { data: userData } = useSWR<IUser | false>('/api/users', fetcher);
   const { revalidate: revalidateMembers } = useSWR<IChannel[]>(
     userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
+  const [newMember, onChangeNewMember, setNewMember] = useInput('');
 
   const onInviteMember = useCallback(
     (e) => {
@@ -36,7 +36,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowCreateChan
         })
         .then(() => {
           revalidateMembers().then(console.log);
-          setShowCreateChannelModal(false);
+          setShowInviteWorkspaceModal(false);
           setNewMember('');
         })
         .catch((error) => {
